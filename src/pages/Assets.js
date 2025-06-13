@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext, useMemo } from 'react';
+import React, { useState, useEffect, useContext, useMemo, useCallback } from 'react';
 import AssetContext from '../context/asset/AssetState';
 import AuthContext from '../context/auth/AuthState';
 import AddAssetModal from '../components/assets/AddAssetModal';
@@ -31,11 +31,13 @@ const Assets = () => {
         department: location.state?.departmentFilter || 'All'
     });
     
+    const stableGetAssets = useCallback(getAssets, []);
+
     useEffect(() => {
         if (isAuthenticated && !authLoading) {
-            getAssets();
+            stableGetAssets();
         }
-    }, [isAuthenticated, authLoading, getAssets]);
+    }, [isAuthenticated, authLoading, stableGetAssets]);
 
     const handleRowClick = (asset) => {
         setSelectedAsset(asset);

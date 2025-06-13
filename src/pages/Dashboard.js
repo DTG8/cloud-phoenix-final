@@ -1,8 +1,10 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Link } from 'react-router-dom';
 import { ServerStackIcon, Squares2X2Icon, DocumentTextIcon, BanknotesIcon, ShieldCheckIcon, ChartBarIcon } from '@heroicons/react/24/outline';
+import AuthContext from '../context/auth/authContext';
 
 const Dashboard = () => {
+    const { user } = useContext(AuthContext);
     const cardStyle = "bg-white p-6 rounded-xl shadow-lg hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 flex flex-col items-center text-center";
     const inactiveCardStyle = `${cardStyle} bg-slate-50 opacity-60 cursor-not-allowed`;
     const iconStyle = "h-12 w-12 mb-4";
@@ -10,7 +12,7 @@ const Dashboard = () => {
     return (
         <div className="container mx-auto px-4 py-8">
             <h1 className="text-4xl font-bold text-slate-800 mb-2">Command Center</h1>
-            <p className="text-lg text-slate-500 mb-10">Welcome back! Here's your mission control.</p>
+            <p className="text-lg text-slate-500 mb-10">Welcome back, {user && user.name}! Here's your mission control.</p>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
                 <Link to="/asset-nexus" className={cardStyle}>
                     <ServerStackIcon className={`${iconStyle} text-blue-600`} />
