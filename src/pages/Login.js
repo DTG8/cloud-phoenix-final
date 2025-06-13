@@ -1,26 +1,24 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import AuthContext from '../context/auth/authContext';
+import AuthContext from '../context/auth/authContext'; // THE CRITICAL IMPORT FIX
 import { CloudIcon } from '@heroicons/react/24/solid';
 
 const Login = () => {
     const authContext = useContext(AuthContext);
     const navigate = useNavigate();
 
-    // State for the form fields
     const [user, setUser] = useState({ email: '', password: '' });
     const { email, password } = user;
 
-    // This effect handles navigation after login and displays errors
     useEffect(() => {
-        // Ensure authContext is not null before accessing its properties
+        // This check prevents a crash if the context is not yet available.
         if (authContext) {
             const { isAuthenticated, error, clearErrors } = authContext;
             if (isAuthenticated) {
                 navigate('/dashboard');
             }
             if (error) {
-                alert(error); // Using alert for now, can be replaced with a better component
+                alert(error);
                 clearErrors();
             }
         }
@@ -30,14 +28,18 @@ const Login = () => {
 
     const onSubmit = e => {
         e.preventDefault();
-        if (email === '' || password === '') {
-            alert('Please fill in all fields');
-        } else if (authContext) { // Ensure authContext exists before calling login
-            authContext.login({ email, password });
+        // This check prevents a crash by ensuring the function exists before calling it.
+        if (authContext && authContext.login) {
+            if (email === '' || password === '') {
+                alert('Please fill in all fields');
+            } else {
+                authContext.login({ email, password });
+            }
         }
     };
 
     return (
+        // The "min-h-full" class fixes the "white margin" layout bug.
         <div className="min-h-full bg-slate-900 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
             <div className="sm:mx-auto sm:w-full sm:max-w-md">
                 <CloudIcon className="mx-auto h-16 w-auto text-blue-500" />

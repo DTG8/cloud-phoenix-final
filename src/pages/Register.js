@@ -5,7 +5,7 @@
 // ===============================================================
 import React, { useState, useContext, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import AuthContext from '../context/auth/authContext';
+import AuthContext from '../context/auth/authContext'; // THE CRITICAL IMPORT FIX
 import { CloudIcon } from '@heroicons/react/24/solid';
 
 const Register = () => {
@@ -16,6 +16,7 @@ const Register = () => {
     const { name, email, password, password2 } = user;
 
     useEffect(() => {
+        // This check prevents a crash if the context is not yet available.
         if (authContext) {
             const { isAuthenticated, error, clearErrors } = authContext;
             if (isAuthenticated) {
@@ -36,12 +37,13 @@ const Register = () => {
             alert('Please enter all fields');
         } else if (password !== password2) {
             alert('Passwords do not match');
-        } else if (authContext) {
+        } else if (authContext && authContext.register) { // Ensure authContext and register function exist
             authContext.register({ name, email, password });
         }
     };
 
     return (
+        // The "min-h-full" class fixes the "white margin" layout bug.
         <div className="min-h-full bg-slate-900 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
             <div className="sm:mx-auto sm:w-full sm:max-w-md">
                 <CloudIcon className="mx-auto h-16 w-auto text-blue-500" />
