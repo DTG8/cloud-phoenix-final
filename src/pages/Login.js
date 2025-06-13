@@ -6,23 +6,19 @@ import { CloudIcon } from '@heroicons/react/24/solid';
 const Login = () => {
     const authContext = useContext(AuthContext);
     const navigate = useNavigate();
-
-    // Safely destructure properties from context. This prevents a crash.
-    const { login, error, clearErrors, isAuthenticated } = authContext || {};
+    
+    const { login, error, clearErrors, isAuthenticated } = authContext;
 
     const [user, setUser] = useState({ email: '', password: '' });
     const { email, password } = user;
 
-    // This stable useEffect hook prevents crashes and handles navigation.
     useEffect(() => {
         if (isAuthenticated) {
             navigate('/dashboard');
         }
         if (error) {
             alert(error);
-            if (clearErrors) {
-                clearErrors();
-            }
+            clearErrors();
         }
     }, [isAuthenticated, error, navigate, clearErrors]);
 
@@ -30,23 +26,14 @@ const Login = () => {
 
     const onSubmit = e => {
         e.preventDefault();
-        // This check prevents the "dead button" crash.
-        if (login) {
-            if (email === '' || password === '') {
-                alert('Please fill in all fields');
-            } else {
-                login({ email, password });
-            }
+        if (email === '' || password === '') {
+            alert('Please fill in all fields');
         } else {
-            console.error('Authentication context is not available, cannot log in.');
-            alert('A critical error occurred. Please refresh the page and try again.');
+            login({ email, password });
         }
     };
 
     return (
-        // THE DEFINITIVE UI FIX IS HERE:
-        // The 'flex-grow' class forces this container to expand and fill all
-        // available vertical space, eliminating the white margin.
         <div className="flex-grow bg-slate-900 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
             <div className="sm:mx-auto sm:w-full sm:max-w-md">
                 <CloudIcon className="mx-auto h-16 w-auto text-blue-500" />
