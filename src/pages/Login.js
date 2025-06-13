@@ -46,7 +46,7 @@ const Login = () => {
     return (
         // THE DEFINITIVE UI FIX IS HERE:
         // The 'flex-grow' class forces this container to expand and fill all
-        // available vertical space within its parent, eliminating the white margin.
+        // available vertical space, eliminating the white margin.
         <div className="flex-grow bg-slate-900 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
             <div className="sm:mx-auto sm:w-full sm:max-w-md">
                 <CloudIcon className="mx-auto h-16 w-auto text-blue-500" />
