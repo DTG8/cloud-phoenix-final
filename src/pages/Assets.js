@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useContext, useMemo } from 'react';
-import AssetContext from '../context/asset/assetContext'; // <-- THE CORRECTED IMPORT
+import React, { useState, useEffect, useContext, useMemo, useCallback } from 'react';
+import AssetContext from '../context/asset/assetContext';
 import AuthContext from '../context/auth/authContext';
 import AddAssetModal from '../components/assets/AddAssetModal';
 import ViewAssetModal from '../components/assets/ViewAssetModal';
@@ -119,3 +119,4 @@ const Assets = () => {
     );
 };
 export default Assets;
+

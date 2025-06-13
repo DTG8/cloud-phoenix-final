@@ -1,8 +1,8 @@
-import React, { createContext, useReducer, useEffect, useCallback } from 'react';
-import authReducer from './authReducer';
-import setAuthToken from '../../utils/setAuthToken';
+import React, { useReducer, useCallback, useEffect } from 'react';
 import axios from 'axios';
 import AuthContext from './authContext';
+import authReducer from './authReducer';
+import setAuthToken from '../../utils/setAuthToken';
 
 export const AuthProvider = ({ children }) => {
     const initialState = { token: localStorage.getItem('token'), isAuthenticated: null, loading: true, user: null, error: null };
@@ -24,9 +24,7 @@ export const AuthProvider = ({ children }) => {
         }
     }, []);
     
-    useEffect(() => {
-        loadUser();
-    }, [loadUser]);
+    useEffect(() => { loadUser(); }, [loadUser]);
 
     const register = async formData => {
         try {
@@ -49,7 +47,6 @@ export const AuthProvider = ({ children }) => {
     };
 
     const logout = () => dispatch({ type: 'LOGOUT' });
-    
     const clearErrors = useCallback(() => dispatch({ type: 'CLEAR_ERRORS' }), []);
 
     return (
@@ -58,3 +55,4 @@ export const AuthProvider = ({ children }) => {
         </AuthContext.Provider>
     );
 };
+

@@ -1,157 +1,104 @@
-// || FILE: src/pages/Register.js (Definitive Version)
-// ===============================================================
 import React, { useState, useContext, useEffect } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { CloudIcon, EnvelopeIcon, LockClosedIcon } from '@heroicons/react/24/solid';
 import AuthContext from '../context/auth/authContext';
-import { CloudIcon } from '@heroicons/react/24/solid';
 
-const Register = () => {
-    const authContext = useContext(AuthContext);
+const Login = () => {
+    const { login, error, clearErrors, isAuthenticated } = useContext(AuthContext);
     const navigate = useNavigate();
-<<<<<<< HEAD
-    
-    const { login, error, clearErrors, isAuthenticated } = authContext;
-=======
 
-    // Safely destructure properties from context.
-    const { register, error, clearErrors, isAuthenticated } = authContext || {};
->>>>>>> 94d1cc06e3e7ab655cbcc587cf16d44cbad5ad06
-
-    const [user, setUser] = useState({ name: '', email: '', password: '', password2: '' });
-    const { name, email, password, password2 } = user;
-
-<<<<<<< HEAD
-=======
-    // This stable useEffect hook prevents crashes.
->>>>>>> 94d1cc06e3e7ab655cbcc587cf16d44cbad5ad06
     useEffect(() => {
         if (isAuthenticated) {
             navigate('/dashboard');
         }
-        if (error) {
-            alert(error);
-<<<<<<< HEAD
-            clearErrors();
-=======
-            if (clearErrors) {
+        // You can add logic here to display the 'error' state as an alert
+        // For simplicity, we'll clear errors on component mount/unmount.
+        return () => {
+            if (error) {
                 clearErrors();
             }
->>>>>>> 94d1cc06e3e7ab655cbcc587cf16d44cbad5ad06
-        }
+        };
     }, [isAuthenticated, error, navigate, clearErrors]);
+    
+    const [user, setUser] = useState({
+        email: '',
+        password: ''
+    });
+
+    const { email, password } = user;
 
     const onChange = e => setUser({ ...user, [e.target.name]: e.target.value });
-    
+
     const onSubmit = e => {
         e.preventDefault();
-<<<<<<< HEAD
         if (email === '' || password === '') {
-            alert('Please fill in all fields');
+            // Here you could set a local alert state, e.g., setAlert('Please fill in all fields', 'danger')
+            console.log('Please fill in all fields');
         } else {
             login({ email, password });
-=======
-        // This check prevents the "dead button" crash.
-        if (register) {
-            if (!name || !email || !password) {
-                alert('Please enter all fields');
-            } else if (password !== password2) {
-                alert('Passwords do not match');
-            } else {
-                register({ name, email, password });
-            }
-        } else {
-            console.error('Auth context not available, cannot register.');
-            alert('A critical error occurred. Please refresh the page.');
->>>>>>> 94d1cc06e3e7ab655cbcc587cf16d44cbad5ad06
         }
     };
 
     return (
-<<<<<<< HEAD
-        <div className="flex-grow bg-slate-900 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
-            <div className="sm:mx-auto sm:w-full sm:max-w-md">
-                <CloudIcon className="mx-auto h-16 w-auto text-blue-500" />
-                <h2 className="mt-6 text-center text-3xl font-extrabold text-white">
-                    Sign in to your account
-                </h2>
-                <p className="mt-2 text-center text-sm text-slate-400">
-                    Or{' '}
-                    <Link to="/register" className="font-medium text-blue-400 hover:text-blue-300">
-                        create a new account
-                    </Link>
-                </p>
-            </div>
+        <div className="flex-grow bg-slate-900 text-white flex flex-col items-center justify-center p-6">
+            <div className="bg-slate-800 border border-slate-700 p-8 rounded-xl shadow-2xl w-full max-w-md">
+                <div className="flex flex-col items-center mb-6">
+                    <div className="flex items-center gap-3 mb-2">
+                        <CloudIcon className="h-10 w-10 text-blue-500" />
+                        <h1 className="text-3xl font-bold tracking-tight">Cloud Phoenix</h1>
+                    </div>
+                    <p className="text-slate-400">Sign in to access your command center.</p>
+                </div>
 
-            <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-                <div className="bg-slate-800 py-8 px-4 shadow-xl rounded-lg sm:px-10">
-                    <form className="space-y-6" onSubmit={onSubmit}>
-                        <div>
-                            <label htmlFor="email" className="block text-sm font-medium text-slate-300">
-                                Email address
-                            </label>
-                            <div className="mt-1">
-                                <input id="email" name="email" type="email" autoComplete="email" required value={email} onChange={onChange} className="appearance-none block w-full px-3 py-2 border border-slate-600 rounded-md shadow-sm placeholder-slate-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm bg-slate-700 text-white" />
-                            </div>
-                        </div>
+                {error && (
+                    <div className="bg-red-500/20 border border-red-500/30 text-red-300 p-3 rounded-md mb-4 text-center">
+                        {error}
+                    </div>
+                )}
+                
+                <form onSubmit={onSubmit} className="space-y-6">
+                    <div className="relative">
+                        <EnvelopeIcon className="h-5 w-5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                        <input 
+                            type="email"
+                            name="email"
+                            value={email}
+                            onChange={onChange}
+                            placeholder="Email Address"
+                            required
+                            className="w-full bg-slate-700 border border-slate-600 rounded-md py-2.5 pl-10 pr-3 focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
+                        />
+                    </div>
+                    <div className="relative">
+                        <LockClosedIcon className="h-5 w-5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                        <input 
+                            type="password"
+                            name="password"
+                            value={password}
+                            onChange={onChange}
+                            placeholder="Password"
+                            required
+                            className="w-full bg-slate-700 border border-slate-600 rounded-md py-2.5 pl-10 pr-3 focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
+                        />
+                    </div>
+                    <div>
+                        <button type="submit" className="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 px-4 rounded-lg text-lg transition-transform transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-slate-800 focus:ring-blue-500">
+                            Login
+                        </button>
+                    </div>
+                </form>
 
-                        <div>
-                            <label htmlFor="password"  className="block text-sm font-medium text-slate-300">
-                                Password
-                            </label>
-                            <div className="mt-1">
-                                <input id="password" name="password" type="password" autoComplete="current-password" required value={password} onChange={onChange} className="appearance-none block w-full px-3 py-2 border border-slate-600 rounded-md shadow-sm placeholder-slate-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm bg-slate-700 text-white" />
-                            </div>
-                        </div>
-
-                        <div>
-                            <button type="submit" className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
-                                Sign in
-=======
-        // The 'flex-grow' class ensures the UI is correct.
-        <div className="flex-grow bg-slate-900 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
-            <div className="sm:mx-auto sm:w-full sm:max-w-md">
-                <CloudIcon className="mx-auto h-16 w-auto text-blue-500" />
-                <h2 className="mt-6 text-center text-3xl font-extrabold text-white">Create your Account</h2>
-                <p className="mt-2 text-center text-sm text-slate-400">
-                    Already have an account?{' '}
-                    <Link to="/login" className="font-medium text-blue-400 hover:text-blue-300">
-                        Sign in
-                    </Link>
-                </p>
-            </div>
-            <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-                <div className="bg-slate-800 py-8 px-4 shadow-xl rounded-lg sm:px-10">
-                    <form className="space-y-6" onSubmit={onSubmit}>
-                        <div>
-                            <label htmlFor="name" className="block text-sm font-medium text-slate-300">Full Name</label>
-                            <div className="mt-1"><input id="name" name="name" type="text" value={name} onChange={onChange} required className="appearance-none block w-full px-3 py-2 border border-slate-600 rounded-md shadow-sm bg-slate-700 text-white placeholder-slate-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"/></div>
-                        </div>
-                        <div>
-                            <label htmlFor="email" className="block text-sm font-medium text-slate-300">Email address</label>
-                            <div className="mt-1"><input id="email" name="email" type="email" value={email} onChange={onChange} required className="appearance-none block w-full px-3 py-2 border border-slate-600 rounded-md shadow-sm bg-slate-700 text-white placeholder-slate-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"/></div>
-                        </div>
-                        <div>
-                            <label htmlFor="password"  className="block text-sm font-medium text-slate-300">Password</label>
-                            <div className="mt-1"><input id="password" name="password" type="password" value={password} onChange={onChange} required minLength="6" className="appearance-none block w-full px-3 py-2 border border-slate-600 rounded-md shadow-sm bg-slate-700 text-white placeholder-slate-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"/></div>
-                        </div>
-                        <div>
-                            <label htmlFor="password2"  className="block text-sm font-medium text-slate-300">Confirm Password</label>
-                            <div className="mt-1"><input id="password2" name="password2" type="password" value={password2} onChange={onChange} required minLength="6" className="appearance-none block w-full px-3 py-2 border border-slate-600 rounded-md shadow-sm bg-slate-700 text-white placeholder-slate-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"/></div>
-                        </div>
-                        <div>
-                            <button type="submit" className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
-                                Register
->>>>>>> 94d1cc06e3e7ab655cbcc587cf16d44cbad5ad06
-                            </button>
-                        </div>
-                    </form>
+                <div className="mt-6 text-center">
+                    <p className="text-slate-400">
+                        Don't have an account?{' '}
+                        <Link to="/register" className="font-semibold text-blue-400 hover:text-blue-300">
+                            Register Here
+                        </Link>
+                    </p>
                 </div>
             </div>
         </div>
     );
 };
-<<<<<<< HEAD
+
 export default Login;
-=======
-export default Register;
->>>>>>> 94d1cc06e3e7ab655cbcc587cf16d44cbad5ad06

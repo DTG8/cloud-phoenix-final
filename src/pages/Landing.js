@@ -1,8 +1,15 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useContext } from 'react';
+import { Link, Navigate } from 'react-router-dom';
 import { CloudIcon, CpuChipIcon, BoltIcon } from '@heroicons/react/24/solid';
+import AuthContext from '../context/auth/authContext';
 
 const Landing = () => {
+    const authContext = useContext(AuthContext);
+
+    if (authContext && authContext.isAuthenticated) {
+        return <Navigate to="/dashboard" />;
+    }
+    
     const AnimatedLogo = () => (
         <div className="relative w-48 h-48 mb-8">
             <CloudIcon className="absolute w-48 h-48 text-blue-500 opacity-80" />
@@ -14,7 +21,7 @@ const Landing = () => {
     );
 
     return (
-        <div className="bg-slate-900 text-white min-h-screen flex flex-col items-center justify-center p-8 text-center">
+        <div className="flex-grow bg-slate-900 text-white flex flex-col items-center justify-center p-8 text-center">
             <AnimatedLogo />
             <h1 className="text-5xl md:text-6xl font-extrabold tracking-tight mb-4">
                 Cloud <span className="text-blue-400">Phoenix</span>
@@ -51,3 +58,4 @@ const Landing = () => {
     );
 };
 export default Landing;
+

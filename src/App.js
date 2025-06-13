@@ -18,7 +18,7 @@ const App = () => {
         <Router>
           <div className="flex flex-col min-h-screen bg-slate-100 font-sans">
             <Navbar />
-            <main className="flex-grow">
+            <main className="flex-grow flex flex-col">
               <Routes>
                 <Route path="/landing" element={<Landing />} />
                 <Route path="/login" element={<Login />} />
