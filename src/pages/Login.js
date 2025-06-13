@@ -1,60 +1,58 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import AuthContext from '../context/auth/authContext'; // THE CRITICAL IMPORT FIX
+import AuthContext from '../context/auth/authContext';
 import { CloudIcon } from '@heroicons/react/24/solid';
 
 const Login = () => {
     const authContext = useContext(AuthContext);
     const navigate = useNavigate();
 
+    // Destructure properties from context safely, providing a fallback.
+    const { login, error, clearErrors, isAuthenticated } = authContext || {};
+
     const [user, setUser] = useState({ email: '', password: '' });
     const { email, password } = user;
 
+    // This useEffect hook now has a stable dependency array.
+    // It will only run when these specific values change.
     useEffect(() => {
-        // This check prevents a crash if the context is not yet available.
-        if (authContext) {
-            const { isAuthenticated, error, clearErrors } = authContext;
-            if (isAuthenticated) {
-                navigate('/dashboard');
-            }
-            if (error) {
-                alert(error);
-                clearErrors();
-            }
+        if (isAuthenticated) {
+            navigate('/dashboard');
         }
-    }, [authContext, navigate]);
+        if (error) {
+            alert(error);
+            clearErrors();
+        }
+    }, [isAuthenticated, error, navigate, clearErrors]);
 
     const onChange = e => setUser({ ...user, [e.target.name]: e.target.value });
 
     const onSubmit = e => {
         e.preventDefault();
-        // This check prevents a crash by ensuring the function exists before calling it.
-        if (authContext && authContext.login) {
-            if (email === '' || password === '') {
-                alert('Please fill in all fields');
-            } else {
-                authContext.login({ email, password });
-            }
+        if (email === '' || password === '') {
+            alert('Please fill in all fields');
+        } else if (login) { // Check if the login function exists before calling
+            login({ email, password });
         }
     };
 
     return (
-        // The "min-h-full" class fixes the "white margin" layout bug.
-        <div className="min-h-full bg-slate-900 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
-            <div className="sm:mx-auto sm:w-full sm:max-w-md">
-                <CloudIcon className="mx-auto h-16 w-auto text-blue-500" />
-                <h2 className="mt-6 text-center text-3xl font-extrabold text-white">
-                    Sign in to your account
-                </h2>
-                <p className="mt-2 text-center text-sm text-slate-400">
-                    Or{' '}
-                    <Link to="/register" className="font-medium text-blue-400 hover:text-blue-300">
-                        create a new account
-                    </Link>
-                </p>
-            </div>
+        // These classes create a fully responsive, full-height, centered layout.
+        <div className="flex-grow flex items-center justify-center bg-slate-900 px-4 py-12 sm:px-6 lg:px-8">
+            <div className="w-full max-w-md space-y-8">
+                <div>
+                    <CloudIcon className="mx-auto h-16 w-auto text-blue-500" />
+                    <h2 className="mt-6 text-center text-3xl font-extrabold text-white">
+                        Sign in to your account
+                    </h2>
+                    <p className="mt-2 text-center text-sm text-slate-400">
+                        Or{' '}
+                        <Link to="/register" className="font-medium text-blue-400 hover:text-blue-300">
+                            create a new account
+                        </Link>
+                    </p>
+                </div>
 
-            <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
                 <div className="bg-slate-800 py-8 px-4 shadow-xl rounded-lg sm:px-10">
                     <form className="space-y-6" onSubmit={onSubmit}>
                         <div>
@@ -62,16 +60,7 @@ const Login = () => {
                                 Email address
                             </label>
                             <div className="mt-1">
-                                <input
-                                    id="email"
-                                    name="email"
-                                    type="email"
-                                    autoComplete="email"
-                                    required
-                                    value={email}
-                                    onChange={onChange}
-                                    className="appearance-none block w-full px-3 py-2 border border-slate-600 rounded-md shadow-sm placeholder-slate-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm bg-slate-700 text-white"
-                                />
+                                <input id="email" name="email" type="email" autoComplete="email" required value={email} onChange={onChange} className="appearance-none block w-full px-3 py-2 border border-slate-600 rounded-md shadow-sm placeholder-slate-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm bg-slate-700 text-white" />
                             </div>
                         </div>
 
@@ -80,24 +69,12 @@ const Login = () => {
                                 Password
                             </label>
                             <div className="mt-1">
-                                <input
-                                    id="password"
-                                    name="password"
-                                    type="password"
-                                    autoComplete="current-password"
-                                    required
-                                    value={password}
-                                    onChange={onChange}
-                                    className="appearance-none block w-full px-3 py-2 border border-slate-600 rounded-md shadow-sm placeholder-slate-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm bg-slate-700 text-white"
-                                />
+                                <input id="password" name="password" type="password" autoComplete="current-password" required value={password} onChange={onChange} className="appearance-none block w-full px-3 py-2 border border-slate-600 rounded-md shadow-sm placeholder-slate-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm bg-slate-700 text-white" />
                             </div>
                         </div>
 
                         <div>
-                            <button
-                                type="submit"
-                                className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-                            >
+                            <button type="submit" className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
                                 Sign in
                             </button>
                         </div>

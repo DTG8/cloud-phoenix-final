@@ -1,33 +1,28 @@
-// ===============================================================
-// || FILE: src/pages/Register.js (Definitive Version)
-// || This version fixes the fatal useContext crash and implements
-// || a fully responsive, modern UI design.
-// ===============================================================
 import React, { useState, useContext, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import AuthContext from '../context/auth/authContext'; // THE CRITICAL IMPORT FIX
+import AuthContext from '../context/auth/authContext';
 import { CloudIcon } from '@heroicons/react/24/solid';
 
 const Register = () => {
     const authContext = useContext(AuthContext);
     const navigate = useNavigate();
 
+    // Destructure properties from context safely, providing a fallback.
+    const { register, error, clearErrors, isAuthenticated } = authContext || {};
+
     const [user, setUser] = useState({ name: '', email: '', password: '', password2: '' });
     const { name, email, password, password2 } = user;
 
+    // This useEffect hook now has a stable dependency array.
     useEffect(() => {
-        // This check prevents a crash if the context is not yet available.
-        if (authContext) {
-            const { isAuthenticated, error, clearErrors } = authContext;
-            if (isAuthenticated) {
-                navigate('/dashboard');
-            }
-            if (error) {
-                alert(error);
-                clearErrors();
-            }
+        if (isAuthenticated) {
+            navigate('/dashboard');
         }
-    }, [authContext, navigate]);
+        if (error) {
+            alert(error);
+            clearErrors();
+        }
+    }, [isAuthenticated, error, navigate, clearErrors]);
 
     const onChange = e => setUser({ ...user, [e.target.name]: e.target.value });
     
@@ -37,25 +32,25 @@ const Register = () => {
             alert('Please enter all fields');
         } else if (password !== password2) {
             alert('Passwords do not match');
-        } else if (authContext && authContext.register) { // Ensure authContext and register function exist
-            authContext.register({ name, email, password });
+        } else if (register) { // Check if the register function exists before calling
+            register({ name, email, password });
         }
     };
 
     return (
-        // The "min-h-full" class fixes the "white margin" layout bug.
-        <div className="min-h-full bg-slate-900 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
-            <div className="sm:mx-auto sm:w-full sm:max-w-md">
-                <CloudIcon className="mx-auto h-16 w-auto text-blue-500" />
-                <h2 className="mt-6 text-center text-3xl font-extrabold text-white">Create your Account</h2>
-                <p className="mt-2 text-center text-sm text-slate-400">
-                    Already have an account?{' '}
-                    <Link to="/login" className="font-medium text-blue-400 hover:text-blue-300">
-                        Sign in
-                    </Link>
-                </p>
-            </div>
-            <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
+        // These classes create a fully responsive, full-height, centered layout.
+        <div className="flex-grow flex items-center justify-center bg-slate-900 px-4 py-12 sm:px-6 lg:px-8">
+            <div className="w-full max-w-md space-y-8">
+                <div>
+                    <CloudIcon className="mx-auto h-16 w-auto text-blue-500" />
+                    <h2 className="mt-6 text-center text-3xl font-extrabold text-white">Create your Account</h2>
+                    <p className="mt-2 text-center text-sm text-slate-400">
+                        Already have an account?{' '}
+                        <Link to="/login" className="font-medium text-blue-400 hover:text-blue-300">
+                            Sign in
+                        </Link>
+                    </p>
+                </div>
                 <div className="bg-slate-800 py-8 px-4 shadow-xl rounded-lg sm:px-10">
                     <form className="space-y-6" onSubmit={onSubmit}>
                         <div>
