@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext, useMemo, useCallback } from 'react';
+import React, { useState, useEffect, useContext, useMemo } from 'react';
 import AssetContext from '../context/asset/assetContext';
 import AuthContext from '../context/auth/authContext';
 import AddAssetModal from '../components/assets/AddAssetModal';
