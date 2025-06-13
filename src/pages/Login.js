@@ -1,3 +1,13 @@
+/*
+=================================================================
+||        CLOUD PHOENIX - DEFINITIVE LOGIN PAGE FIX V2         ||
+=================================================================
+|| This is a complete redesign of the Login page. It provides  ||
+|| a new, robust, and aesthetically modern UI, while fixing    ||
+|| the underlying functional crashes and layout bugs.          ||
+=================================================================
+*/
+
 import React, { useState, useContext, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import AuthContext from '../context/auth/authContext';
