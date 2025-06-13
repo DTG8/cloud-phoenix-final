@@ -5,7 +5,14 @@ import authReducer from './authReducer';
 import setAuthToken from '../../utils/setAuthToken';
 
 export const AuthProvider = ({ children }) => {
-    const initialState = { token: localStorage.getItem('token'), isAuthenticated: null, loading: true, user: null, error: null };
+    const initialState = {
+        token: localStorage.getItem('token'),
+        isAuthenticated: null,
+        loading: true,
+        user: null,
+        error: null,
+    };
+
     const [state, dispatch] = useReducer(authReducer, initialState);
     const API_URL = 'https://project-phoenix-api.onrender.com/api';
 
@@ -24,7 +31,9 @@ export const AuthProvider = ({ children }) => {
         }
     }, []);
     
-    useEffect(() => { loadUser(); }, [loadUser]);
+    useEffect(() => {
+        loadUser();
+    }, [loadUser]);
 
     const register = async formData => {
         try {
