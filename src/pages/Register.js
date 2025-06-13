@@ -1,3 +1,8 @@
+// ===============================================================
+// || FILE: src/pages/Register.js (Definitive Version)
+// || This version fixes the fatal useContext crash and implements
+// || a fully responsive, modern UI design.
+// ===============================================================
 import React, { useState, useContext, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import AuthContext from '../context/auth/authContext';
@@ -5,21 +10,24 @@ import { CloudIcon } from '@heroicons/react/24/solid';
 
 const Register = () => {
     const authContext = useContext(AuthContext);
-    const { register, error, clearErrors, isAuthenticated } = authContext;
     const navigate = useNavigate();
-
-    useEffect(() => {
-        if (isAuthenticated) {
-            navigate('/dashboard');
-        }
-        if (error) {
-            alert(error);
-            clearErrors();
-        }
-    }, [error, isAuthenticated, navigate, clearErrors]);
 
     const [user, setUser] = useState({ name: '', email: '', password: '', password2: '' });
     const { name, email, password, password2 } = user;
+
+    useEffect(() => {
+        if (authContext) {
+            const { isAuthenticated, error, clearErrors } = authContext;
+            if (isAuthenticated) {
+                navigate('/dashboard');
+            }
+            if (error) {
+                alert(error);
+                clearErrors();
+            }
+        }
+    }, [authContext, navigate]);
+
     const onChange = e => setUser({ ...user, [e.target.name]: e.target.value });
     
     const onSubmit = e => {
@@ -28,8 +36,8 @@ const Register = () => {
             alert('Please enter all fields');
         } else if (password !== password2) {
             alert('Passwords do not match');
-        } else {
-            register({ name, email, password });
+        } else if (authContext) {
+            authContext.register({ name, email, password });
         }
     };
 

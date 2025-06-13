@@ -5,29 +5,35 @@ import { CloudIcon } from '@heroicons/react/24/solid';
 
 const Login = () => {
     const authContext = useContext(AuthContext);
-    const { login, error, clearErrors, isAuthenticated } = authContext;
     const navigate = useNavigate();
 
-    useEffect(() => {
-        if (isAuthenticated) {
-            navigate('/dashboard');
-        }
-        if (error) {
-            alert(error);
-            clearErrors();
-        }
-    }, [error, isAuthenticated, navigate, clearErrors]);
-
+    // State for the form fields
     const [user, setUser] = useState({ email: '', password: '' });
     const { email, password } = user;
+
+    // This effect handles navigation after login and displays errors
+    useEffect(() => {
+        // Ensure authContext is not null before accessing its properties
+        if (authContext) {
+            const { isAuthenticated, error, clearErrors } = authContext;
+            if (isAuthenticated) {
+                navigate('/dashboard');
+            }
+            if (error) {
+                alert(error); // Using alert for now, can be replaced with a better component
+                clearErrors();
+            }
+        }
+    }, [authContext, navigate]);
+
     const onChange = e => setUser({ ...user, [e.target.name]: e.target.value });
-    
+
     const onSubmit = e => {
         e.preventDefault();
         if (email === '' || password === '') {
             alert('Please fill in all fields');
-        } else {
-            login({ email, password });
+        } else if (authContext) { // Ensure authContext exists before calling login
+            authContext.login({ email, password });
         }
     };
 
@@ -35,7 +41,9 @@ const Login = () => {
         <div className="min-h-full bg-slate-900 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
             <div className="sm:mx-auto sm:w-full sm:max-w-md">
                 <CloudIcon className="mx-auto h-16 w-auto text-blue-500" />
-                <h2 className="mt-6 text-center text-3xl font-extrabold text-white">Sign in to your account</h2>
+                <h2 className="mt-6 text-center text-3xl font-extrabold text-white">
+                    Sign in to your account
+                </h2>
                 <p className="mt-2 text-center text-sm text-slate-400">
                     Or{' '}
                     <Link to="/register" className="font-medium text-blue-400 hover:text-blue-300">
