@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useContext, useMemo, useCallback } from 'react';
-import AssetContext from '../context/asset/AssetState';
-import AuthContext from '../context/auth/AuthState';
+import React, { useState, useEffect, useContext, useMemo } from 'react';
+import AssetContext from '../context/asset/assetContext'; // <-- THE CORRECTED IMPORT
+import AuthContext from '../context/auth/authContext';
 import AddAssetModal from '../components/assets/AddAssetModal';
 import ViewAssetModal from '../components/assets/ViewAssetModal';
 import { Link, useLocation } from 'react-router-dom';
@@ -16,8 +16,10 @@ const LoadingSpinner = () => (
 );
 
 const Assets = () => {
-    const { assets, loading: assetsLoading, getAssets } = useContext(AssetContext);
-    const { isAuthenticated, loading: authLoading } = useContext(AuthContext);
+    const assetContext = useContext(AssetContext);
+    const authContext = useContext(AuthContext);
+    const { assets, loading: assetsLoading, getAssets } = assetContext;
+    const { isAuthenticated, loading: authLoading } = authContext;
     const location = useLocation();
     
     const [showAddModal, setShowAddModal] = useState(false);

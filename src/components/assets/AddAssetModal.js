@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react';
-import AssetContext from '../../context/asset/assetContext';
+import AssetContext from '../../context/asset/assetContext'; // <-- THE CORRECTED IMPORT
 
 const AddAssetModal = ({ show, onClose }) => {
     const { addAsset } = useContext(AssetContext);

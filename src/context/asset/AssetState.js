@@ -1,11 +1,20 @@
-import React, { useReducer, useCallback } from 'react';
+import React, { createContext, useReducer, useCallback } from 'react';
 import axios from 'axios';
-import AssetContext from './assetContext';
 import assetReducer from './assetReducer';
 
+// Create Context
+const AssetContext = createContext();
+
+// Create Provider Component
 export const AssetProvider = ({ children }) => {
-    const initialState = { assets: [], loading: true, error: null };
+    const initialState = {
+        assets: [],
+        loading: true,
+        error: null,
+    };
+
     const [state, dispatch] = useReducer(assetReducer, initialState);
+
     const API_URL = 'https://project-phoenix-api.onrender.com/api';
 
     const getAssets = useCallback(async () => {
@@ -13,33 +22,53 @@ export const AssetProvider = ({ children }) => {
         try {
             const res = await axios.get(`${API_URL}/assets`);
             dispatch({ type: 'GET_ASSETS_SUCCESS', payload: res.data });
-        } catch (err) { dispatch({ type: 'ASSET_ERROR', payload: 'Could not fetch assets' }); }
+        } catch (err) {
+            dispatch({ type: 'ASSET_ERROR', payload: 'Could not fetch assets' });
+        }
     }, []);
 
-    const addAsset = useCallback(async asset => {
+    const addAsset = useCallback(async (asset) => {
         try {
             const res = await axios.post(`${API_URL}/assets`, asset, { headers: { 'Content-Type': 'application/json' } });
             dispatch({ type: 'ADD_ASSET_SUCCESS', payload: res.data });
-        } catch (err) { dispatch({ type: 'ASSET_ERROR', payload: 'Could not add asset' }); }
+        } catch (err) {
+            dispatch({ type: 'ASSET_ERROR', payload: 'Could not add asset' });
+        }
     }, []);
-    
-    const updateAsset = useCallback(async asset => {
+
+    const updateAsset = useCallback(async (asset) => {
         try {
             const res = await axios.put(`${API_URL}/assets/${asset._id}`, asset, { headers: { 'Content-Type': 'application/json' } });
             dispatch({ type: 'UPDATE_ASSET_SUCCESS', payload: res.data });
-        } catch (err) { dispatch({ type: 'ASSET_ERROR', payload: 'Could not update asset' }); }
+        } catch (err) {
+            dispatch({ type: 'ASSET_ERROR', payload: 'Could not update asset' });
+        }
     }, []);
 
-    const deleteAsset = useCallback(async id => {
+    const deleteAsset = useCallback(async (id) => {
         try {
             await axios.delete(`${API_URL}/assets/${id}`);
             dispatch({ type: 'DELETE_ASSET_SUCCESS', payload: id });
-        } catch (err) { dispatch({ type: 'ASSET_ERROR', payload: 'Could not delete asset' }); }
+        } catch (err) {
+            dispatch({ type: 'ASSET_ERROR', payload: 'Could not delete asset' });
+        }
     }, []);
 
     return (
-        <AssetContext.Provider value={{...state, getAssets, addAsset, updateAsset, deleteAsset}}>
+        <AssetContext.Provider
+            value={{
+                assets: state.assets,
+                loading: state.loading,
+                error: state.error,
+                getAssets,
+                addAsset,
+                updateAsset,
+                deleteAsset,
+            }}
+        >
             {children}
         </AssetContext.Provider>
     );
 };
+
+export default AssetContext;
