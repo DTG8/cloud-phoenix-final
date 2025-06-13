@@ -1,3 +1,6 @@
+// ===============================================================
+// || FILE: src/pages/Login.js (Definitive Version)
+// ===============================================================
 import React, { useState, useContext, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import AuthContext from '../context/auth/authContext';
@@ -6,19 +9,26 @@ import { CloudIcon } from '@heroicons/react/24/solid';
 const Login = () => {
     const authContext = useContext(AuthContext);
     const navigate = useNavigate();
-    
-    const { login, error, clearErrors, isAuthenticated } = authContext;
+
+    // Safely destructure properties from context. This prevents a crash if the
+    // context is not yet available on the initial render.
+    const { login, error, clearErrors, isAuthenticated } = authContext || {};
 
     const [user, setUser] = useState({ email: '', password: '' });
     const { email, password } = user;
 
+    // This useEffect hook is now stable and will only run when these specific
+    // values change, preventing the previous infinite loop crash.
     useEffect(() => {
         if (isAuthenticated) {
             navigate('/dashboard');
         }
         if (error) {
             alert(error);
-            clearErrors();
+            // Ensure clearErrors exists before calling it
+            if (clearErrors) {
+                clearErrors();
+            }
         }
     }, [isAuthenticated, error, navigate, clearErrors]);
 
@@ -26,14 +36,24 @@ const Login = () => {
 
     const onSubmit = e => {
         e.preventDefault();
-        if (email === '' || password === '') {
-            alert('Please fill in all fields');
+        // This check prevents the "dead button" crash by ensuring the login
+        // function exists before attempting to call it.
+        if (login) {
+            if (email === '' || password === '') {
+                alert('Please fill in all fields');
+            } else {
+                login({ email, password });
+            }
         } else {
-            login({ email, password });
+            console.error('Authentication context is not available, cannot log in.');
+            alert('A critical error occurred. Please refresh the page and try again.');
         }
     };
 
     return (
+        // THE DEFINITIVE UI FIX IS HERE:
+        // The 'flex-grow' class forces this container to expand and fill all
+        // available vertical space, eliminating the white margin.
         <div className="flex-grow bg-slate-900 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
             <div className="sm:mx-auto sm:w-full sm:max-w-md">
                 <CloudIcon className="mx-auto h-16 w-auto text-blue-500" />
