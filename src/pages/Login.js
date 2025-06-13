@@ -7,52 +7,59 @@ const Login = () => {
     const authContext = useContext(AuthContext);
     const navigate = useNavigate();
 
-    // Destructure properties from context safely, providing a fallback.
-    const { login, error, clearErrors, isAuthenticated } = authContext || {};
-
     const [user, setUser] = useState({ email: '', password: '' });
     const { email, password } = user;
 
-    // This useEffect hook now has a stable dependency array.
-    // It will only run when these specific values change.
+    // This effect hook is now more robust. It only runs when the context's
+    // properties change, and safely handles the case where the context is not yet available.
     useEffect(() => {
-        if (isAuthenticated) {
-            navigate('/dashboard');
+        if (authContext) {
+            const { isAuthenticated, error, clearErrors } = authContext;
+            if (isAuthenticated) {
+                navigate('/dashboard');
+            }
+            if (error) {
+                alert(error);
+                clearErrors();
+            }
         }
-        if (error) {
-            alert(error);
-            clearErrors();
-        }
-    }, [isAuthenticated, error, navigate, clearErrors]);
+    }, [authContext, navigate]);
 
     const onChange = e => setUser({ ...user, [e.target.name]: e.target.value });
 
     const onSubmit = e => {
         e.preventDefault();
-        if (email === '' || password === '') {
-            alert('Please fill in all fields');
-        } else if (login) { // Check if the login function exists before calling
-            login({ email, password });
+        // This check prevents a crash by ensuring the function exists before calling.
+        if (authContext && authContext.login) {
+            if (email === '' || password === '') {
+                alert('Please fill in all fields');
+            } else {
+                authContext.login({ email, password });
+            }
+        } else {
+            console.error('Auth context not available');
+            alert('A critical error occurred. Please refresh the page.');
         }
     };
 
     return (
-        // These classes create a fully responsive, full-height, centered layout.
-        <div className="flex-grow flex items-center justify-center bg-slate-900 px-4 py-12 sm:px-6 lg:px-8">
-            <div className="w-full max-w-md space-y-8">
-                <div>
-                    <CloudIcon className="mx-auto h-16 w-auto text-blue-500" />
-                    <h2 className="mt-6 text-center text-3xl font-extrabold text-white">
-                        Sign in to your account
-                    </h2>
-                    <p className="mt-2 text-center text-sm text-slate-400">
-                        Or{' '}
-                        <Link to="/register" className="font-medium text-blue-400 hover:text-blue-300">
-                            create a new account
-                        </Link>
-                    </p>
-                </div>
+        // These classes create a fully responsive, full-height, centered layout,
+        // correcting the "white margin" bug.
+        <div className="min-h-full bg-slate-900 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+            <div className="sm:mx-auto sm:w-full sm:max-w-md">
+                <CloudIcon className="mx-auto h-16 w-auto text-blue-500" />
+                <h2 className="mt-6 text-center text-3xl font-extrabold text-white">
+                    Sign in to your account
+                </h2>
+                <p className="mt-2 text-center text-sm text-slate-400">
+                    Or{' '}
+                    <Link to="/register" className="font-medium text-blue-400 hover:text-blue-300">
+                        create a new account
+                    </Link>
+                </p>
+            </div>
 
+            <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
                 <div className="bg-slate-800 py-8 px-4 shadow-xl rounded-lg sm:px-10">
                     <form className="space-y-6" onSubmit={onSubmit}>
                         <div>

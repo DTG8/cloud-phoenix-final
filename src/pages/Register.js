@@ -1,6 +1,7 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import AuthContext from '../context/auth/authContext';
+
 import { CloudIcon } from '@heroicons/react/24/solid';
 
 const Register = () => {
@@ -34,23 +35,26 @@ const Register = () => {
             alert('Passwords do not match');
         } else if (register) { // Check if the register function exists before calling
             register({ name, email, password });
+        } else {
+            console.error('Auth context not available');
+            alert('A critical error occurred. Please refresh the page.');
         }
     };
 
     return (
         // These classes create a fully responsive, full-height, centered layout.
-        <div className="flex-grow flex items-center justify-center bg-slate-900 px-4 py-12 sm:px-6 lg:px-8">
-            <div className="w-full max-w-md space-y-8">
-                <div>
-                    <CloudIcon className="mx-auto h-16 w-auto text-blue-500" />
-                    <h2 className="mt-6 text-center text-3xl font-extrabold text-white">Create your Account</h2>
-                    <p className="mt-2 text-center text-sm text-slate-400">
-                        Already have an account?{' '}
-                        <Link to="/login" className="font-medium text-blue-400 hover:text-blue-300">
-                            Sign in
-                        </Link>
-                    </p>
-                </div>
+        <div className="min-h-full bg-slate-900 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+            <div className="sm:mx-auto sm:w-full sm:max-w-md">
+                <CloudIcon className="mx-auto h-16 w-auto text-blue-500" />
+                <h2 className="mt-6 text-center text-3xl font-extrabold text-white">Create your Account</h2>
+                <p className="mt-2 text-center text-sm text-slate-400">
+                    Already have an account?{' '}
+                    <Link to="/login" className="font-medium text-blue-400 hover:text-blue-300">
+                        Sign in
+                    </Link>
+                </p>
+            </div>
+            <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
                 <div className="bg-slate-800 py-8 px-4 shadow-xl rounded-lg sm:px-10">
                     <form className="space-y-6" onSubmit={onSubmit}>
                         <div>
