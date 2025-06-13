@@ -1,13 +1,3 @@
-/*
-=================================================================
-||        CLOUD PHOENIX - DEFINITIVE LOGIN PAGE V3             ||
-=================================================================
-|| This version reverts to the original, preferred UI design,  ||
-|| while integrating the robust, crash-proof logic and correct ||
-|| full-screen responsive layout.                              ||
-=================================================================
-*/
-
 import React, { useState, useContext, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import AuthContext from '../context/auth/authContext';
@@ -54,8 +44,10 @@ const Login = () => {
     };
 
     return (
-        // These classes implement the original, full-screen, centered dark theme correctly.
-        <div className="min-h-full bg-slate-900 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+        // THE DEFINITIVE UI FIX IS HERE:
+        // The 'flex-grow' class forces this container to expand and fill all
+        // available vertical space within its parent, eliminating the white margin.
+        <div className="flex-grow bg-slate-900 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
             <div className="sm:mx-auto sm:w-full sm:max-w-md">
                 <CloudIcon className="mx-auto h-16 w-auto text-blue-500" />
                 <h2 className="mt-6 text-center text-3xl font-extrabold text-white">
