@@ -1,20 +1,17 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import AuthContext from '../context/auth/authContext';
-
 import { CloudIcon } from '@heroicons/react/24/solid';
 
 const Register = () => {
     const authContext = useContext(AuthContext);
     const navigate = useNavigate();
 
-    // Destructure properties from context safely, providing a fallback.
-    const { register, error, clearErrors, isAuthenticated } = authContext || {};
+    const { register, error, clearErrors, isAuthenticated } = authContext;
 
     const [user, setUser] = useState({ name: '', email: '', password: '', password2: '' });
     const { name, email, password, password2 } = user;
 
-    // This useEffect hook now has a stable dependency array.
     useEffect(() => {
         if (isAuthenticated) {
             navigate('/dashboard');
@@ -33,17 +30,13 @@ const Register = () => {
             alert('Please enter all fields');
         } else if (password !== password2) {
             alert('Passwords do not match');
-        } else if (register) { // Check if the register function exists before calling
-            register({ name, email, password });
         } else {
-            console.error('Auth context not available');
-            alert('A critical error occurred. Please refresh the page.');
+            register({ name, email, password });
         }
     };
 
     return (
-        // These classes create a fully responsive, full-height, centered layout.
-        <div className="min-h-full bg-slate-900 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+        <div className="flex-grow bg-slate-900 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
             <div className="sm:mx-auto sm:w-full sm:max-w-md">
                 <CloudIcon className="mx-auto h-16 w-auto text-blue-500" />
                 <h2 className="mt-6 text-center text-3xl font-extrabold text-white">Create your Account</h2>

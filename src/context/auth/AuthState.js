@@ -1,18 +1,11 @@
-import React, { useReducer, useCallback, useEffect } from 'react';
-import axios from 'axios';
-import AuthContext from './authContext';
+import React, { createContext, useReducer, useEffect, useCallback } from 'react';
 import authReducer from './authReducer';
 import setAuthToken from '../../utils/setAuthToken';
+import axios from 'axios';
+import AuthContext from './authContext';
 
 export const AuthProvider = ({ children }) => {
-    const initialState = {
-        token: localStorage.getItem('token'),
-        isAuthenticated: null,
-        loading: true,
-        user: null,
-        error: null,
-    };
-
+    const initialState = { token: localStorage.getItem('token'), isAuthenticated: null, loading: true, user: null, error: null };
     const [state, dispatch] = useReducer(authReducer, initialState);
     const API_URL = 'https://project-phoenix-api.onrender.com/api';
 
@@ -56,7 +49,8 @@ export const AuthProvider = ({ children }) => {
     };
 
     const logout = () => dispatch({ type: 'LOGOUT' });
-    const clearErrors = () => dispatch({ type: 'CLEAR_ERRORS' });
+    
+    const clearErrors = useCallback(() => dispatch({ type: 'CLEAR_ERRORS' }), []);
 
     return (
         <AuthContext.Provider value={{...state, register, login, logout, clearErrors, loadUser }}>
