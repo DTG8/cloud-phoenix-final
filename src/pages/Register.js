@@ -1,7 +1,9 @@
+// ===============================================================
+// || FILE: src/pages/Register.js (Definitive Version)
+// ===============================================================
 import React, { useState, useContext, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import AuthContext from '../context/auth/authContext';
-
 import { CloudIcon } from '@heroicons/react/24/solid';
 
 const Register = () => {
@@ -21,7 +23,9 @@ const Register = () => {
         }
         if (error) {
             alert(error);
-            clearErrors();
+            if (clearErrors) {
+                clearErrors();
+            }
         }
     }, [isAuthenticated, error, navigate, clearErrors]);
 
@@ -29,21 +33,24 @@ const Register = () => {
     
     const onSubmit = e => {
         e.preventDefault();
-        if (!name || !email || !password) {
-            alert('Please enter all fields');
-        } else if (password !== password2) {
-            alert('Passwords do not match');
-        } else if (register) { // Check if the register function exists before calling
-            register({ name, email, password });
+        // This check prevents the "dead button" crash.
+        if (register) {
+            if (!name || !email || !password) {
+                alert('Please enter all fields');
+            } else if (password !== password2) {
+                alert('Passwords do not match');
+            } else {
+                register({ name, email, password });
+            }
         } else {
-            console.error('Auth context not available');
+            console.error('Auth context not available, cannot register.');
             alert('A critical error occurred. Please refresh the page.');
         }
     };
 
     return (
         // These classes create a fully responsive, full-height, centered layout.
-        <div className="min-h-full bg-slate-900 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+        <div className="flex-grow bg-slate-900 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
             <div className="sm:mx-auto sm:w-full sm:max-w-md">
                 <CloudIcon className="mx-auto h-16 w-auto text-blue-500" />
                 <h2 className="mt-6 text-center text-3xl font-extrabold text-white">Create your Account</h2>
