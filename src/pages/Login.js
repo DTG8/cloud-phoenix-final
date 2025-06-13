@@ -7,45 +7,51 @@ const Login = () => {
     const authContext = useContext(AuthContext);
     const navigate = useNavigate();
 
+    // Safely destructure properties from context, providing a fallback.
+    // This prevents a crash if the context is not yet available on the initial render.
+    const { login, error, clearErrors, isAuthenticated } = authContext || {};
+
     const [user, setUser] = useState({ email: '', password: '' });
     const { email, password } = user;
 
-    // This effect hook is now more robust. It only runs when the context's
-    // properties change, and safely handles the case where the context is not yet available.
+    // This useEffect hook is now stable and will only run when the specified
+    // values change, preventing the previous infinite loop crash.
     useEffect(() => {
-        if (authContext) {
-            const { isAuthenticated, error, clearErrors } = authContext;
-            if (isAuthenticated) {
-                navigate('/dashboard');
-            }
-            if (error) {
-                alert(error);
+        if (isAuthenticated) {
+            navigate('/dashboard');
+        }
+        if (error) {
+            alert(error);
+            // Ensure clearErrors exists before calling it
+            if (clearErrors) {
                 clearErrors();
             }
         }
-    }, [authContext, navigate]);
+    }, [isAuthenticated, error, navigate, clearErrors]);
 
     const onChange = e => setUser({ ...user, [e.target.name]: e.target.value });
 
     const onSubmit = e => {
         e.preventDefault();
-        // This check prevents a crash by ensuring the function exists before calling.
-        if (authContext && authContext.login) {
+        // This check prevents the "dead button" crash by ensuring the login
+        // function exists before attempting to call it.
+        if (login) {
             if (email === '' || password === '') {
                 alert('Please fill in all fields');
             } else {
-                authContext.login({ email, password });
+                login({ email, password });
             }
         } else {
-            console.error('Auth context not available');
-            alert('A critical error occurred. Please refresh the page.');
+            // This provides clear feedback if the app is in a broken state.
+            console.error('Authentication context is not available, cannot log in.');
+            alert('A critical error occurred. Please refresh the page and try again.');
         }
     };
 
     return (
-        // These classes create a fully responsive, full-height, centered layout,
-        // correcting the "white margin" bug.
-        <div className="min-h-full bg-slate-900 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+        // THE UI FIX IS HERE: These classes create a fully responsive, full-height,
+        // vertically and horizontally centered layout, correcting the "white margin" bug.
+        <div className="flex-grow bg-slate-900 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
             <div className="sm:mx-auto sm:w-full sm:max-w-md">
                 <CloudIcon className="mx-auto h-16 w-auto text-blue-500" />
                 <h2 className="mt-6 text-center text-3xl font-extrabold text-white">
