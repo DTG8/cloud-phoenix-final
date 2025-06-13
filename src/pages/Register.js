@@ -1,6 +1,3 @@
-// ===============================================================
-// || FILE: src/pages/Register.js (Definitive Version)
-// ===============================================================
 import React, { useState, useContext, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import AuthContext from '../context/auth/authContext';
@@ -10,22 +7,18 @@ const Register = () => {
     const authContext = useContext(AuthContext);
     const navigate = useNavigate();
 
-    // Destructure properties from context safely, providing a fallback.
-    const { register, error, clearErrors, isAuthenticated } = authContext || {};
+    const { register, error, clearErrors, isAuthenticated } = authContext;
 
     const [user, setUser] = useState({ name: '', email: '', password: '', password2: '' });
     const { name, email, password, password2 } = user;
 
-    // This useEffect hook now has a stable dependency array.
     useEffect(() => {
         if (isAuthenticated) {
             navigate('/dashboard');
         }
         if (error) {
             alert(error);
-            if (clearErrors) {
-                clearErrors();
-            }
+            clearErrors();
         }
     }, [isAuthenticated, error, navigate, clearErrors]);
 
@@ -33,23 +26,16 @@ const Register = () => {
     
     const onSubmit = e => {
         e.preventDefault();
-        // This check prevents the "dead button" crash.
-        if (register) {
-            if (!name || !email || !password) {
-                alert('Please enter all fields');
-            } else if (password !== password2) {
-                alert('Passwords do not match');
-            } else {
-                register({ name, email, password });
-            }
+        if (!name || !email || !password) {
+            alert('Please enter all fields');
+        } else if (password !== password2) {
+            alert('Passwords do not match');
         } else {
-            console.error('Auth context not available, cannot register.');
-            alert('A critical error occurred. Please refresh the page.');
+            register({ name, email, password });
         }
     };
 
     return (
-        // These classes create a fully responsive, full-height, centered layout.
         <div className="flex-grow bg-slate-900 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
             <div className="sm:mx-auto sm:w-full sm:max-w-md">
                 <CloudIcon className="mx-auto h-16 w-auto text-blue-500" />
