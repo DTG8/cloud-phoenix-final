@@ -1,8 +1,8 @@
-import React, { createContext, useReducer, useEffect, useCallback } from 'react';
-import authReducer from './authReducer';
-import setAuthToken from '../../utils/setAuthToken';
+import React, { useReducer, useCallback, useEffect } from 'react';
 import axios from 'axios';
 import AuthContext from './authContext';
+import authReducer from './authReducer';
+import setAuthToken from '../../utils/setAuthToken';
 
 export const AuthProvider = ({ children }) => {
     const initialState = { token: localStorage.getItem('token'), isAuthenticated: null, loading: true, user: null, error: null };

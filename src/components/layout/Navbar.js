@@ -1,6 +1,6 @@
 import React, { useContext, Fragment } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import AuthContext from '../../context/auth/AuthState';
+import AuthContext from '../../context/auth/authContext';
 import Logo from './Logo';
 
 const Navbar = () => {

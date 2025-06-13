@@ -31,13 +31,11 @@ const Assets = () => {
         department: location.state?.departmentFilter || 'All'
     });
     
-    const stableGetAssets = useCallback(getAssets, []);
-
     useEffect(() => {
         if (isAuthenticated && !authLoading) {
-            stableGetAssets();
+            getAssets();
         }
-    }, [isAuthenticated, authLoading, stableGetAssets]);
+    }, [isAuthenticated, authLoading, getAssets]);
 
     const handleRowClick = (asset) => {
         setSelectedAsset(asset);
