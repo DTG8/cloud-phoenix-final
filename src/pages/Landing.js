@@ -21,7 +21,7 @@ const Landing = () => {
     );
 
     return (
-        <div className="flex-grow bg-slate-900 text-white flex flex-col items-center justify-center p-8 text-center">
+        <div className="h-full bg-slate-900 text-white flex flex-col items-center justify-center p-8 text-center">
             <AnimatedLogo />
             <h1 className="text-5xl md:text-6xl font-extrabold tracking-tight mb-4">
                 Cloud <span className="text-blue-400">Phoenix</span>
@@ -58,4 +58,3 @@ const Landing = () => {
     );
 };
 export default Landing;
-
